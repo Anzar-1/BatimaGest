@@ -1,3 +1,6 @@
 from django.contrib import admin
+from BG import models
 
-# Register your models here.
+admin.site.register(models.Resident)
+admin.site.register(models.Partie_Comune)
+admin.site.register(models.Signalement)

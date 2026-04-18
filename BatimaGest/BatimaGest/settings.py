@@ -16,6 +16,8 @@ from dotenv import load_dotenv
 import dj_database_url
 from pathlib import Path
 
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
@@ -82,6 +84,7 @@ WSGI_APPLICATION = 'BatimaGest.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+
 DATABASES = {
     'default':{ #dj_database_url.config(default=os.environ.get('DATABASE_URL'),conn_max_age=1800)
         #'ENGINE': 'django.db.backends.sqlite3',
@@ -89,9 +92,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': "railway",
         'USER' : "postgres",
-        'PASSWORD' : os.environ.get('PGPASSWORD'),
-        'HOST': "postgres.railway.internal",
-        'PORT': "5432",}
+        'PASSWORD' : os.getenv('PGPASSWORD'),
+        'HOST': "switchyard.proxy.rlwy.net",
+        'PORT': "15512",}
     }
 
 
