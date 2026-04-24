@@ -1,0 +1,100 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batima-Gest - Gestion de Copropriété</title>
+    <link rel="stylesheet" href="{%static 'css/BatimaGes.css'%}">
+</head>
+<body>
+
+    <!-- Page d'inscription -->
+    <div id="login-page" class="page active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>Batima-Gest</h1>
+                    <p>Gestion de copropriété simplifiée</p>
+                </div>
+
+                <form action = "" method = "POST" id="login-form" class="login-form">
+                    {%csrf_token%}
+
+                 <div class="form-group">
+                <p>
+                    {{form.username.errors}}
+                <label for="id_username">Username:</label>
+                <input type="text" name="username" maxlength="150" autocapitalize="none" autocomplete="username" autofocus="" required="" aria-describedby="id_username_helptext" id="id_username">
+                
+                    <span class="helptext" id="id_username_helptext">150 Caractères au maximum requis. (Lettre, chiffre et @/./+/-/_ seulement.)</span>
+                </p>
+                </div>
+                
+                <div class="form-group">
+                <p>
+                    {{form.first_name.errors}}
+                    <label for="id_first_name">Prénom:</label>
+                    <input type="text" name="first_name" maxlength="150" id="id_first_name">
+                </p>
+                <div class="form-group"></div>
+
+                 <div class="form-group">
+                <p>
+                    {{form.last_name.errors}}
+                    <label for="id_last_name">Nom:</label>
+                    <input type="text" name="last_name" maxlength="150" id="id_last_name">
+                </p>
+                <div class="form-group"></div>
+                
+                 <div class="form-group">
+                <p>
+                    {{form.email.errors}}
+                    <label for="id_email">Email:</label>
+                    <input type="email" name="email" maxlength="254" id="id_email">
+                </p>
+                </div>
+
+                 <div class="form-group">
+                <p>
+                    {{form.telephone.errors}}
+                    <label for="id_telephone">Telephone:</label>
+                    <input type="number" name="telephone" id="id_telephone">
+                </p>
+                </div>
+
+                 <div class="form-group">
+                <p>
+                    {{form.password.errors}}
+                    <label for="id_password1">Mot de passe:</label>
+                    <input type="password" name="password1" autocomplete="new-password" required="" aria-describedby="id_password1_helptext" id="id_password1">
+                    
+                    <span class="helptext" id="id_password1_helptext"></span></p><ul><li>Votre mot de passe ne doit pas ressembler au reste de vos information.</li><li>Votre mot de passe doit au moins contenir 8 charactère</li><li>Votre mot de passe ne doit pas etre courant.</li><li>Votre mot de passe ne doit pas être entierement composé de nombre</li></ul>
+                <p></p>
+                 </div>
+
+                  <div class="form-group">
+                <p>
+                    {{form.password2.errors}}
+                    <label for="id_password2">Confirmer le mot de passe:</label>
+                    <input type="password" name="password2" autocomplete="new-password" required="" aria-describedby="id_password2_helptext" id="id_password2">
+                </p>
+                </div>
+
+                <p>&nbsp&nbsp&nbsp</p>
+
+                    <input type="submit" value="Se connecter"/>
+                </form>
+
+                <div class="login-footer">
+                    <button id="toggle-signup" class="btn-link">
+                        Pas de compte ? S'inscrire
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <!--<script type="text/javascript" src = "{% static 'js/index.js' %} "></script>-->
+</body>
+</html
