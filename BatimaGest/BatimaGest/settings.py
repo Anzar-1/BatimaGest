@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import dj_database_url
-from pathlib import Path
 
 load_dotenv()
 
@@ -46,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "BG"
+    #Je dois mettre whitenoise aussi.
 ]
 
 MIDDLEWARE = [
@@ -77,6 +76,11 @@ TEMPLATES = [
         },
     },
 ]
+
+#Authentication backends
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
 
 WSGI_APPLICATION = 'BatimaGest.wsgi.application'
 
@@ -133,3 +137,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_DIR = [os.path.join(BASE_DIR ,'BG/static')]
+
+STATIC_ROOT = os.path.join(BASE_DIR ,'staticfiles')
+
+LOGIN_URL = 'connexion/'
+
+AUTH_USER_MODEL = 'BG.Resident'

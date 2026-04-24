@@ -1,0 +1,168 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batima-Gest - Gestion de Copropriété</title>
+    <link rel="stylesheet" href="{%static 'css/BatimaGes.css'%}">
+</head>
+<body>
+    
+
+    <!-- Dashboard -->
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1>Batima-Gest</h1>
+                        <p id="welcome-text" class="welcome-text">Bienvenue</p>
+                    </div>
+                    <div class="header-right">
+                        <div class="notification-icon">
+                            <span class="icon">🔔</span>
+                            <span id="notification-badge" class="badge hidden">0</span>
+                        </div>
+                        <button id="logout-btn" class="btn btn-outline">
+                            <span class="icon">🚪</span>
+                            <a href=" {%url 'logout' %}">Déconnexion</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="container">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-view="dashboard">Mes signalements</button>
+                    <button class="nav-tab" data-view="areas">Parties communes</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Dashboard View -->
+                <div id="dashboard-view" class="view active">
+                    <!-- Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon yellow">⏱️</div>
+                            <div class="stat-content">
+                                <p class="stat-label">En attente</p>
+                                <p id="pending-count" class="stat-value">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">⚠️</div>
+                            <div class="stat-content">
+                                <p class="stat-label">En cours</p>
+                                <p id="inprogress-count" class="stat-value">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">✅</div>
+                            <div class="stat-content">
+                                <p class="stat-label">Résolus</p>
+                                <p id="resolved-count" class="stat-value">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Create Report Button -->
+                    <div class="action-bar">
+                        <button id="new-report-btn" class="btn btn-primary">
+                            <span class="icon">➕</span>
+                            Nouveau signalement
+                        </button>
+                    </div>
+
+                    <!-- Reports List -->
+                    <div id="reports-list"></div>
+                </div>
+
+                <!-- Common Areas View -->
+                <div id="areas-view" class="view">
+                    <div class="view-header">
+                        <div>
+                            <h2>Parties communes</h2>
+                            <p class="subtitle">Consultez et signalez les incidents</p>
+                        </div>
+                        <button id="create-from-areas-btn" class="btn btn-primary">
+                            <span class="icon">➕</span>
+                            Signaler un incident
+                        </button>
+                    </div>
+                    <div id="areas-grid" class="areas-grid"></div>
+                </div>
+
+                <!-- Create Report View -->
+                <div id="create-view" class="view">
+                    <div class="form-container">
+                        <div class="form-card">
+                            <h2>Nouveau signalement</h2>
+
+                            <form id="report-form">
+                                <div class="form-group">
+                                    <label for="common-area">Partie commune concernée *</label>
+                                    <select id="common-area" required>
+                                        <option value="">Sélectionnez une partie commune</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Priorité</label>
+                                    <div class="priority-buttons">
+                                        <button type="button" class="priority-btn" data-priority="low">Faible</button>
+                                        <button type="button" class="priority-btn active" data-priority="medium">Moyenne</button>
+                                        <button type="button" class="priority-btn" data-priority="high">Haute</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="description">Description du problème *</label>
+                                    <textarea id="description" rows="5" placeholder="Décrivez le problème en détail..." required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Photo (optionnelle)</label>
+                                    <div id="image-upload-area" class="image-upload-area">
+                                        <input type="file" id="image-input" accept="image/*" hidden>
+                                        <div id="upload-placeholder" class="upload-placeholder">
+                                            <span class="upload-icon">📤</span>
+                                            <p>Cliquez pour ajouter une photo</p>
+                                            <p class="upload-hint">PNG, JPG jusqu'à 10MB</p>
+                                        </div>
+                                        <div id="image-preview" class="image-preview hidden">
+                                            <img id="preview-img" src="" alt="Aperçu">
+                                            <button type="button" id="remove-image" class="remove-image">❌</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-banner">
+                                    <span class="info-icon">ℹ️</span>
+                                    <div>
+                                        <p class="info-title">Bon à savoir</p>
+                                        <p>Votre signalement sera envoyé au syndic et aux responsables de copropriété. Vous recevrez une notification dès qu'une action sera entreprise.</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" id="cancel-report-btn" class="btn btn-outline">Annuler</button>
+                                    <button type="submit" class="btn btn-primary">Envoyer le signalement</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+   <!-- <script type="text/javascript" src = "{% static 'js/index.js'%} "></script>-->
+</body>
+</html
