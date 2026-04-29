@@ -1,0 +1,273 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batima-Gest Admin - Gestion des signalements</title>
+    <link rel="stylesheet" href='{%static "css/admin.css"%}'>
+</head>
+<body>
+    <!-- Admin Dashboard -->
+        <!-- Header -->
+        <header class="app-header admin-header">
+            <div class="header-container">
+                <div class="header-left">
+                    <div class="logo-small admin-logo">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                        </svg>
+                    </div>
+                    <div class="header-info">
+                        <h1>Administration</h1>
+                        <p id="admin-welcome">Gestion des signalements</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span id="admin-notif-badge" class="badge">0</span>
+                    </button>
+                    <button class="btn btn-outline btn-small" id="admin-logout-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        <a href="{%url 'logout'%}">Deconnexion</a>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+         <main class="app-main admin-main">
+            <div class="content-container">
+                <!-- Stats Overview -->
+                <section class="section">
+                    <div class="view-header">
+                        <h2>Vue d'ensemble</h2>
+                        <p class="subtitle">Statistiques globales des signalements</p>
+                    </div>
+
+                    <div class="admin-stats-grid">
+                        <div class="admin-stat-card total">
+                            <div class="stat-header">
+                                <div class="stat-icon-large">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10 9 9 9 8 9"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-trend">📊</div>
+                            </div>
+                            <div class="stat-value" id="total-reports">{{signal_count}}</div>
+                            <div class="stat-label">Total signalements</div>
+                        </div>
+
+                        <div class="admin-stat-card pending">
+                            <div class="stat-header">
+                                <div class="stat-icon-large">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-trend">⏱️</div>
+                            </div>
+                            <div class="stat-value" id="admin-pending-count">{{enAttente}}</div>
+                            <div class="stat-label">En attente</div>
+                        </div>
+
+                        <div class="admin-stat-card progress">
+                            <div class="stat-header">
+                                <div class="stat-icon-large">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-trend">🔧</div>
+                            </div>
+                            <div class="stat-value" id="admin-progress-count">{{enCours}}</div>
+                            <div class="stat-label">En cours</div>
+                        </div>
+
+                        <div class="admin-stat-card resolved">
+                            <div class="stat-header">
+                                <div class="stat-icon-large">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-trend">✅</div>
+                            </div>
+                            <div class="stat-value" id="admin-resolved-count">{{resolu}}</div>
+                            <div class="stat-label">Résolus</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Filters -->
+                <section class="section">
+                    <form method="GET">
+                    <div class="filters-card">
+                        <div class="filters-header">
+                            <h3>Filtres</h3>
+                            <button id="reset-filters" class="btn btn-outline btn-small">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 4 23 10 17 10"/>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                                </svg>
+                                Réinitialiser
+                            </button>
+                        </div>
+                        <div class="filters-grid">
+                            <div class="input-group">
+                                <label for="filter-status">Statut</label>
+                                <select id="filter-status"  name="status">
+                                    <option value="all">Tous</option>
+                                    <option value="pending">En attente</option>
+                                    <option value="in_progress">En cours</option>
+                                    <option value="resolved">Résolu</option>
+                                    <option value="rejected">Rejeté</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group" name="area">
+                                <label for="filter-area">Partie commune</label>
+                                <select id="filter-area">
+                                    <option value="all">Toutes</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group" >
+                                <label for="filter-priority">Priorité</label>
+                                <select id="filter-priority" name="priority">
+                                    <option value="all">Toutes</option>
+                                    <option value="high">Haute</option>
+                                    <option value="medium">Moyenne</option>
+                                    <option value="low">Faible</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group"  >
+                                <label for="filter-date">Période</label>
+                                <select id="filter-date" name="date">
+                                    <option value="all">Tout</option>
+                                    <option value="today">Aujourd'hui</option>
+                                    <option value="week">7 derniers jours</option>
+                                    <option value="month">30 derniers jours</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </section>
+
+                <!-- Reports List -->
+                <section class="section">
+                    <div class="view-header">
+                        <div>
+                            <h2>Liste des signalements</h2>
+                            {%if not signal%}
+                                <p class="subtitle"><span id="filtered-count">0</span> signalement(s)</p>
+                            {%else%}
+                                {%for s in signal%}
+                                    <div class="admin-report-card priority">
+                <div class="report-grid">
+                    <div class="report-info">
+                        <span class="report-label">👤 Résident</span>
+                        <div class="report-user">
+                            <div class="user-avatar">{{s.resident.last_name|slice:":1"}}</div>
+                            <div>
+                                <div class="report-value">{{s.resident.first_name}}  {{s.resident.last_name}}</div>
+                                <div style="font-size: 0.75rem; color: #6b7280;">{{s.resident.email}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="report-info">
+                        <span class="report-label">🏢 Partie commune</span>
+                        <span class="report-value">{{s.partieC}}</span>
+                    </div>
+
+                    <div class="report-info">
+                        <span class="report-label">⚡ Priorité</span>
+                        <span class="priority-badge ${report.priority}">{{s.priorite}}</span>
+                    </div>
+
+                    <div class="report-info">
+                        <span class="report-label">📊 Statut</span>
+                        <div class="status-badge ${report.status}">
+                            <span>{{s.state}}</span>
+                        </div>
+                    </div>
+
+                    <div class="report-info" style="grid-column: 1 / -1;">
+                        <span class="report-label">📝 Description</span>
+                        <p class="report-description">{{s.description}}</p>
+                    </div>
+
+                    <div class="report-info" style="grid-column: 1 / -1;">
+                        <span class="report-label">📅 Informations</span>
+                        <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: #6b7280;">
+                            <span>Créé le {{s.created_at|date:"d/m/Y H:i" }}</span>
+                            <span>• Mis à jour le {{s.updated_at|date:"d/m/Y H:i" }}</span>
+                        </div>
+                    </div>
+
+                        <div style="grid-column: 1 / -1;">
+                            {%if s.file_path%}
+                                <a href="/media/{{s.file_path}}">Image</a>
+                            {%endif%}
+                    </div>
+                    <form action =  "" method = "POST">
+                        {%csrf_token%}
+                    <input type="hidden" name="report_id" value="{{ s.id }}">
+                    {%if s.state == "En Attente"%}
+                        <button class="btn-small" type="submit" name="action" value="start">
+                            Signaler que la demande est en cour de traitement</button>
+                    {%elif s.state == 'En cours' %}
+                        <button class="btn-small" type="submit" name="action" value="resolve">
+                             Signaler que le problème est résolu
+                         </button>
+                    {%elif s.state == 'Résolu'%}
+                        <p>Le problème est résolu</p>
+                    {%endif%}
+                    </form>
+                                {%endfor%}
+                            {%endif%}
+                        </div>
+                    </div>
+
+                    <div id="admin-reports-list" class="admin-reports-list"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="report-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2>Détails du signalement</h2>
+                <button id="close-modal" class="close-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+</body>
+</html>

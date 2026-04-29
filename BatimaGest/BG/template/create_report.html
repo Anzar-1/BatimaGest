@@ -1,0 +1,122 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batima-Gest - Gestion de Copropriété</title>
+    <link rel="stylesheet" href="{%static 'css/BatimaGes.css'%}">
+</head>
+<body>
+
+        <!-- Header -->
+                <!-- Header -->
+        <header class="app-header">
+            <div class="header-container">
+                <div class="header-left">
+                    <div class="logo-small">
+                        <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                            <path d="M20 5L35 15V28L20 38L5 28V15L20 5Z" fill="url(#gradient2)"/>
+                            <defs>
+                                <linearGradient id="gradient2" x1="5" y1="5" x2="35" y2="38">
+                                    <stop offset="0%" stop-color="#6366f1"/>
+                                    <stop offset="100%" stop-color="#8b5cf6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="header-info">
+                        <h1>Batima-Gest</h1>
+                        <p id="welcome-text">Bienvenue</p>
+                    </div>
+                    </div>
+                    <div class="header-right">
+                        <div class="notification-icon">
+                            <span class="icon">🔔</span>
+                            <span id="notification-badge" class="badge hidden">0</span>
+                        </div>
+                        <button id="logout-btn" class="btn btn-outline">
+                            <span class="icon">🚪</span>
+                            <a href=" {%url 'logout' %}">Déconnexion</a>
+                        </button>
+                    </div>
+                </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-app">
+            <div class="nav-container">
+                    <button class="nav-item active" data-view="dashboard">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                        Mes signalements</button>
+                    <button class="nav-item" data-view="areas">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                        Parties communes</button>
+            </div>
+        </nav>
+                
+                <!-- Create Report View -->
+                    <div class="form-container">
+                            <h2>Nouveau signalement</h2>
+
+                            <form id="report-form" enctype="multipart/form-data"  class="report-form" method="POST">
+                                {%csrf_token%}
+
+
+                                <div class="input-group">
+                                    {{form.resident.errors}}
+                                    <label for="description">Auteur du rapport *</label>
+                                    {{form.resident}}
+                                </div>
+
+                                  <div class="input-group">
+                                    {{form.partieC.errors}}
+                                    <label for="common-area">Partie commune concernée *</label>
+                                    {{form.partieC}}
+                                </div>
+
+                                <div class="input-group">
+                                    {{form.file_path.errors}}
+                                    <label>Photo</label>
+                                    {{form.file_path}}
+                                </div>
+
+                                <div class="input-group">
+                                    {{form.description.errors}}
+                                    <label for="description">Description du problème *</label>
+                                    {{form.description}}
+                                </div>
+
+                                <div class="input-group">
+                                    {{form.priorite.errors}}
+                                    <label for="description">Degrès de priorité *</label>
+                                    {{form.priorite}}
+                                </div>
+
+                                <div class="info-box">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="16" x2="12" y2="12" stroke="white" stroke-width="2"/>
+                                    <circle cx="12" cy="8" r="1" fill="white"/>
+                                </svg>
+                                <div>
+                                    <strong>À savoir</strong>
+                                    <p>Votre signalement sera transmis au syndic. Vous serez notifié de son traitement.</p>
+                                </div>
+                            </div>
+
+                                <div class="form-actions">
+                                    <input type="submit" class="btn btn-primary" value=Envoyer le signalement>
+                                </div>
+                            </form>
+                        </div>
+</body>
+</html>

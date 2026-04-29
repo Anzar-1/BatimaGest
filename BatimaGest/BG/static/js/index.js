@@ -1,3 +1,5 @@
+console.log("bonjour");
+
 let state = {
     user: null,
     isSignup: false,
@@ -143,7 +145,7 @@ function initLogout() {
 
 // Navigation
 function initNavigation() {
-    document.querySelectorAll('.nav-tab').forEach(tab => {
+    document.querySelectorAll('.nav-item').forEach(tab => {
         tab.addEventListener('click', () => {
             showView(tab.dataset.view);
             if (tab.dataset.view === 'areas') {
@@ -383,9 +385,11 @@ function resetForm() {
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', () => {
+
+});
+
     initLogin();
     initLogout();
     initNavigation();
     initCreateReport();
     updateDashboard();
-});

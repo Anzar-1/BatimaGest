@@ -1,25 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager, PermissionsMixin
+from django.core.exceptions import ValidationError
+import os
 
-#class customUserManager(UserManager):
-#    def _create_user(self,email,password,**extrafields):
-#        if not email:
-#            raise ValueError("You have to provide an email adress")
-#        email = self.normalize_email(email)
-#        user = self.model(email= email, **extrafields)
-#        user.set_password(password)
-#        user.save(using = self._db)
-#        return user
-#    
-#    def create_user(self, email,password,**extrafields):
-#        extrafields.setdefault('is_staff', False)
-#        extrafields.setdefault('is_superuser', False)
-#        return self._create_user(email, password, **extrafields)
-#    
-#    def create_superuser(self, email,password,**extrafields):
-#        extrafields.setdefault('is_staff', True)
-#        extrafields.setdefault('is_superuser', True)
-#        return self._create_user(email, password, **extrafields)
+def Validate_fichier(value):
+    ext = os.path.splitext(value.name)[1]
+    valid_extensions = ['.png', '.jpg']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError("Le fichier dois être une image png ou jpg.")
+
 
 class Resident(AbstractUser, PermissionsMixin):
     telephone = models.fields.IntegerField(null = True, blank = True)
@@ -35,6 +24,28 @@ class Partie_Comune(models.TextChoices):
     Piscine = "Piscine"
 
 class Signalement(models.Model):
-    resident = models.ForeignKey(Resident, on_delete=models.SET_NULL, null = True)
+    resident = models.ForeignKey(Resident, on_delete=models.SET_NULL, null = True, blank = True)
     partieC= models.fields.CharField(max_length=50, choices=Partie_Comune.choices, default = "Ascenseur")
-    file_path = models.FileField(upload_to="files/", null = True,verbose_name="")
+    file_path = models.FileField(upload_to="files/", null = True,verbose_name="", blank = True,validators=[Validate_fichier]) 
+    #Je dois verifier la "fin"
+    description = models.CharField(max_length=500)
+    
+    class etat(models.TextChoices):
+        Resolu = "Résolu"
+        EnCours = "En cours"
+        EnAttente = "En Attente"
+
+    state = models.fields.CharField(max_length=50, choices = etat.choices, default = "En Attente")
+
+    class Priority(models.TextChoices):
+        Basse = "Basse"
+        Moyenne = "Moyenne"
+        Haute = "Haute"
+
+    priorite = models.fields.CharField(max_length=50, choices = Priority.choices, default = "Basse")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Notification(models.Model):
+    resident = models.ForeignKey(Resident, on_delete = models.Case, null= True, blank= True)
+    message = models.fields.CharField(max_length=200)

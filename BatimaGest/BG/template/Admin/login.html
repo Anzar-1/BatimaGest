@@ -1,0 +1,54 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batima-Gest Admin - Gestion des signalements</title>
+    <link rel="stylesheet" href='{%static "css/admin.css"%}'>
+</head>
+<body>
+  <div id="admin-login-page" class="page active">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <div class="logo-circle admin-logo">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                        </svg>
+                    </div>
+                    <h1>Batima-Gest Admin</h1>
+                    <p>Panneau d'administration</p>
+                </div>
+                <form id="admin-login-form" class="auth-form" method = "POST">
+                    {%csrf_token%}
+
+                    <div id="name-field" class="input-group">
+                        {{form.username.errors}}
+                        <label>username</label>
+                        {{form.username}}
+                    </div>
+
+                    <div class="input-group">
+                        {{form.password.errors}}
+                        <label>Mot de passe</label>
+                        {{form.password}}
+                    </div>
+                    
+                    <p>&nbsp;</p>
+
+                    <input type="submit" class="btn btn-primary btn-large" value="Se connecter"/>
+                </form>
+
+                  <div class="demo-box">
+                        <strong>🎯 Compte de démonstration</strong>
+                        <p>Username : <code>admin-123</code></p>
+                        <p>Mot de passe : <code>admin123</code></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

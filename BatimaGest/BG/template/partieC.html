@@ -1,0 +1,153 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batima-Gest - Gestion de Copropriété</title>
+    <link rel="stylesheet" href="{%static 'css/BatimaGes.css'%}">
+</head>
+<body>
+    
+
+    <!-- Dashboard -->
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-container">
+                <div class="header-left">
+                    <div class="logo-small">
+                        <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                            <path d="M20 5L35 15V28L20 38L5 28V15L20 5Z" fill="url(#gradient2)"/>
+                            <defs>
+                                <linearGradient id="gradient2" x1="5" y1="5" x2="35" y2="38">
+                                    <stop offset="0%" stop-color="#6366f1"/>
+                                    <stop offset="100%" stop-color="#8b5cf6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="header-info">
+                        <h1>Batima-Gest</h1>
+                        <p id="welcome-text">Bienvenue</p>
+                    </div>
+                    </div>
+                    <div class="header-right">
+                        <div class="notification-icon">
+                            <span class="icon">🔔</span>
+                            <span id="notification-badge" class="badge hidden">0</span>
+                        </div>
+                        <button id="logout-btn" class="btn btn-outline">
+                            <span class="icon">🚪</span>
+                            <a href=" {%url 'logout' %}">Déconnexion</a>
+                        </button>
+                    </div>
+                </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-app">
+            <div class="nav-container">
+                    <button class="nav-item" data-view="dashboard">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <a href = "{%url 'index' user_id %}">dashboard</a>
+                </button>
+                    <button  class="nav-item active">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    <a href = "{%url 'patieC' user_id %}">Parties communes</a>
+                        </button>
+            </div>
+        </nav>
+
+         <main class="app-main">
+            <div class="content-container">
+
+             <!-- Common Areas View -->
+                    <div class="view-header">
+                        <div>
+                            <h2>Parties communes</h2>
+                            <p class="subtitle">Consultez et signalez les incidents</p>
+                        </div>
+
+
+                        <div class="area-card">
+                            <div class="area-content">
+                                <div class="area-info">
+                                    <h3 class="area-name">Ascenseur</h3>
+                                    {%if signal_ascenseur%}
+                                        <div class="area-status warning">⚠️  {{signal_ascenseur}} signalements</div>`
+                                    {%else%} 
+                                        <div class="area-status success">✓ Aucun incident</div>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>&nbsp;</p>
+
+                        <div class="area-card">
+                            <div class="area-content">
+                                <div class="area-info">
+                                    <h3 class="area-name">Parking</h3>
+                                    {%if signal_parking%}
+                                        <div class="area-status warning">⚠️  {{signal_parking}} signalements</div>`
+                                    {%else%} 
+                                        <div class="area-status success">✓ Aucun incident</div>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>&nbsp;</p>
+
+                        <div class="area-card">
+                            <div class="area-content">
+                                <div class="area-info">
+                                    <h3 class="area-name">Escalier</h3>
+                                    {%if signal_escalier%}
+                                        <div class="area-status warning">⚠️  {{signal_escalier}} signalements</div>`
+                                    {%else%} 
+                                        <div class="area-status success">✓ Aucun incident</div>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>&nbsp;</p>
+
+                        <div class="area-card">
+                            <div class="area-content">
+                                <div class="area-info">
+                                    <h3 class="area-name">Piscine</h3>
+                                    {%if signal_piscine%}
+                                        <div class="area-status warning">⚠️  {{signal_piscine}} signalements</div>`
+                                    {%else%} 
+                                        <div class="area-status success">✓ Aucun incident</div>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>&nbsp;</p>
+
+                        <button id="create-from-areas-btn" class="btn btn-primary">
+                            <span class="icon">➕</span>
+                            <a href = "{%url 'create_report' user_id%}">Signaler un incident</a>
+                        </button>
+                    </div>
+                    <div id="areas-grid" class="areas-grid"></div>
+
+                </div>
+            </main>
+
+        
+   <script type="text/javascript" src = "{% static 'js/index.js'%} "></script>
+</body>
+</html

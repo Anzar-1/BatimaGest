@@ -3,3 +3,4 @@ from BG import models
 
 admin.site.register(models.Resident)
 admin.site.register(models.Signalement)
+admin.site.register(models.Notification)

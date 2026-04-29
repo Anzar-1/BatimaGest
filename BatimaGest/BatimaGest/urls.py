@@ -16,12 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from BG import views
+from BG import views, views_staff
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", views.index, name = "index"),
+    path("<int:user_id>", views.index, name = "index"),
+    path('partieComune/<int:user_id>', views.partieC, name = "patieC"),
     path("connexion/", views.connection, name = "login"),
     path("deconnexion/", views.deconnection, name= "logout"),
-    path("inscription/", views.signUp, name= "signIn")
-]
+    path("inscription/", views.signUp, name= "signIn"),
+
+    path("staff_login/", views_staff.connection_staff, name = "staff_login"),
+    path("logout/", views_staff.deconnection, name = "logout"),
+    path('dashboard/<int:user_id>', views_staff.dashboard, name = "staffDashboard"),
+
+    path("creer_signalement/<int:user_id>",views.create_report, name= "create_report")
+]+static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

@@ -10,34 +10,47 @@
 <body>
 
     <!-- Page de connexion -->
-    <div id="login-page" class="page active">
-        <div class="login-container">
-            <div class="login-card">
-                <div class="login-header">
+   <div id="login-page" class="page active">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <div class="logo-circle">
+                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <path d="M20 5L35 15V28L20 38L5 28V15L20 5Z" fill="url(#gradient1)"/>
+                            <defs>
+                                <linearGradient id="gradient1" x1="5" y1="5" x2="35" y2="38">
+                                    <stop offset="0%" stop-color="#6366f1"/>
+                                    <stop offset="100%" stop-color="#8b5cf6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
                     <h1>Batima-Gest</h1>
-                    <p>Gestion de copropriété simplifiée</p>
+                    <p>Votre espace copropriété</p>
                 </div>
 
                 <form action = "" method = "POST" id="login-form" class="login-form">
                     {%csrf_token%}
 
-                    <div class="form-group">
+                    <div id="name-field" class="input-group">
                         {{form.username.errors}}
                         <label>username</label>
                         {{form.username}}
                     </div>
 
-                    <div class="form-group">
+                    <div class="input-group">
                         {{form.password.errors}}
                         <label>Mot de passe</label>
                         {{form.password}}
                     </div>
+                    
+                    <p>&nbsp;</p>
 
-                    <input type="submit" value="Se connecter"/>
+                    <input type="submit" class="btn btn-primary btn-large" value="Se connecter"/>
                 </form>
 
-                <div class="login-footer">
-                    <button id="toggle-signup" class="btn-link">
+                <div class="auth-footer" >
+                    <button id="toggle-signup" class="link-btn">
                         <a href="{%url 'signIn'%}">Pas de compte ? S'inscrire</a>
                     </button>
                 </div>
