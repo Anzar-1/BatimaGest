@@ -29,7 +29,7 @@ urlpatterns = [
     path("inscription/", views.signUp, name= "signIn"),
 
     path("staff_login/", views_staff.connection_staff, name = "staff_login"),
-    path("logout/", views_staff.deconnection, name = "logout"),
+    path("logout/", views_staff.deconnection, name = "staff_logout"),
     path('dashboard/<int:user_id>', views_staff.dashboard, name = "staffDashboard"),
 
     path("creer_signalement/<int:user_id>",views.create_report, name= "create_report")

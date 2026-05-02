@@ -1,4 +1,5 @@
 console.log("bonjour");
+const INITIAL_NOTIFICATIONS = JSON.parse(document.getElementById('notif-data').textContent)
 
 let state = {
     user: null,
@@ -6,6 +7,7 @@ let state = {
     currentView: 'dashboard',
     selectedPriority: 'medium',
     imagePreview: null,
+    notifications: INITIAL_NOTIFICATIONS,
     reports: [
         {
             id: '1',
@@ -61,6 +63,130 @@ const priorityLabels = {
     high: 'Haute'
 };
 
+
+
+
+// ============================================================
+// SYSTÈME DE NOTIFICATIONS RÉSIDENT
+// ============================================================
+
+function updateNotifBadge() {
+    const unread = state.notifications.filter(n => !n.lue).length;
+    const badge  = document.getElementById('notif-badge');
+    if (unread > 0) {
+        badge.textContent = unread > 9 ? '9+' : unread;
+        badge.classList.remove('hidden');
+        badge.style.animation = 'none';
+        requestAnimationFrame(() => { badge.style.animation = ''; });
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+function renderNotifications() {
+    const list = document.getElementById('notif-list');
+    if (!list) return;
+
+    if (state.notifications.length === 0) {
+        list.innerHTML = `<div class="notif-empty"><span>🔔</span><p>Aucune notification</p></div>`;
+        return;
+    }
+
+    list.innerHTML = state.notifications.map(n => `
+        <div class="notif-item ${n.lue ? '' : 'notif-unread'}" data-id="${n.id}" role="button" tabindex="0">
+            <div class="notif-icon">
+                ${n.type === 'status_change' ? '🔄' : n.type === 'new_report' ? '📋' : 'ℹ️'}
+            </div>
+            <div class="notif-content">
+                <p class="notif-message">${n.fields.message}</p>
+                <span class="notif-time">${n.fields.created_at}</span>
+            </div>
+            ${!n.lue ? '<div class="notif-dot"></div>' : ''}
+        </div>
+    `).join('');
+
+    list.querySelectorAll('.notif-item').forEach(item => {
+        item.addEventListener('click', () => markNotifRead(item.dataset.id));
+    });
+}
+
+function markNotifRead(notifId) {
+    const notif = state.notifications.find(n => n.id === notifId);
+    if (notif && !notif.lue) {
+        notif.lue = true;
+        saveNotifications();
+        renderNotifications();
+        updateNotifBadge();
+    }
+}
+
+function markAllNotifRead() {
+    state.notifications.forEach(n => (n.lue = true));
+    saveNotifications();
+    renderNotifications();
+    updateNotifBadge();
+    showToast('Toutes les notifications sont marquées comme lues.', 'info');
+}
+
+function initNotifPanel() {
+    const btn        = document.getElementById('notifications-btn');
+    const panel      = document.getElementById('notif-panel');
+    const overlay    = document.getElementById('notif-overlay');
+    const closeBtn   = document.getElementById('close-notif-panel');
+    const markAllBtn = document.getElementById('mark-all-read-btn');
+
+    if (!btn || !panel) 
+        {   console.log("Btn ou Panel non trouvée")
+            return;}
+
+
+    const openPanel = () => {
+        panel.classList.add('open');
+        overlay.classList.add('open');
+    };
+    const closePanel = () => {
+        panel.classList.remove('open');
+        overlay.classList.remove('open');
+    };
+
+    btn.addEventListener('click', openPanel);
+    closeBtn.addEventListener('click', closePanel);
+    overlay.addEventListener('click', closePanel);
+    markAllBtn.addEventListener('click', markAllNotifRead);
+
+    // Fermer avec Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+    });
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+
+function showToast(message, type = 'info', duration = 4000) {
+    const container = document.getElementById('toast-container');
+    if (!container) 
+        {   console.log("container not found")
+            return;}
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    const icons = { success: '✅', error: '❌', info: '🔔', warning: '⚠️' };
+    toast.innerHTML = `
+        <span class="toast-icon">${icons[type] || '🔔'}</span>
+        <span class="toast-msg">${message}</span>
+        <button class="toast-close" aria-label="Fermer">×</button>`;
+    toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
+
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('toast-show'));
+    setTimeout(() => {
+        toast.classList.remove('toast-show');
+        setTimeout(() => toast.remove(), 400);
+    }, duration);
+}
+
 // Utilitaires
 function formatDate(date) {
     const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
@@ -97,52 +223,6 @@ function showView(viewId) {
     }
 }
 
-// Login
-function initLogin() {
-    const loginForm = document.getElementById('login-form');
-    const toggleSignup = document.getElementById('toggle-signup');
-    const nameField = document.getElementById('name-field');
-    const loginIcon = document.getElementById('login-icon');
-    const loginText = document.getElementById('login-text');
-
-    toggleSignup.addEventListener('click', () => {
-        state.isSignup = !state.isSignup;
-
-        if (state.isSignup) {
-            nameField.classList.remove('hidden');
-            loginIcon.textContent = '✍️';
-            loginText.textContent = "S'inscrire";
-            toggleSignup.textContent = 'Déjà un compte ? Se connecter';
-        } else {
-            nameField.classList.add('hidden');
-            loginIcon.textContent = '🔑';
-            loginText.textContent = 'Se connecter';
-            toggleSignup.textContent = "Pas de compte ? S'inscrire";
-        }
-    });
-
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const name = document.getElementById('name').value || email.split('@')[0];
-
-        state.user = { email, name };
-        document.getElementById('welcome-text').textContent = `Bienvenue, ${name}`;
-
-        showPage('dashboard-page');
-        updateDashboard();
-    });
-}
-
-// Logout
-function initLogout() {
-    document.getElementById('logout-btn').addEventListener('click', () => {
-        state.user = null;
-        document.getElementById('login-form').reset();
-        showPage('login-page');
-    });
-}
-
 // Navigation
 function initNavigation() {
     document.querySelectorAll('.nav-item').forEach(tab => {
@@ -155,241 +235,12 @@ function initNavigation() {
     });
 }
 
-// Dashboard
-function updateDashboard() {
-    updateStats();
-    renderReports();
-}
 
-function updateStats() {
-    const pending = state.reports.filter(r => r.status === 'pending').length;
-    const inProgress = state.reports.filter(r => r.status === 'in_progress').length;
-    const resolved = state.reports.filter(r => r.status === 'resolved').length;
 
-    document.getElementById('pending-count').textContent = pending;
-    document.getElementById('inprogress-count').textContent = inProgress;
-    document.getElementById('resolved-count').textContent = resolved;
-
-    const badge = document.getElementById('notification-badge');
-    if (pending > 0) {
-        badge.textContent = pending;
-        badge.classList.remove('hidden');
-    } else {
-        badge.classList.add('hidden');
-    }
-}
-
-function renderReports() {
-    const container = document.getElementById('reports-list');
-
-    if (state.reports.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">⚠️</div>
-                <h3>Aucun signalement</h3>
-                <p>Vous n'avez pas encore créé de signalement.</p>
-            </div>
-        `;
-        return;
-    }
-
-    const html = `
-        <h2 class="reports-header">Historique des signalements</h2>
-        ${state.reports.map(report => {
-            const status = statusLabels[report.status];
-            return `
-                <div class="report-card">
-                    <div class="report-header">
-                        <div class="report-title-area">
-                            <div class="report-title-row">
-                                <h3 class="report-title">${report.commonAreaName}</h3>
-                                <span class="priority-badge ${report.priority}">${priorityLabels[report.priority]}</span>
-                            </div>
-                            <p class="report-description">${report.description}</p>
-                            <div class="report-meta">
-                                <span>📅 ${formatDate(report.createdAt)}</span>
-                                ${report.status !== 'pending' ? `<span>⏱️ Mis à jour le ${formatDateShort(report.updatedAt)}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="status-badge ${report.status}">
-                            <span>${status.icon}</span>
-                            <span>${status.label}</span>
-                        </div>
-                    </div>
-                    ${report.image ? `<img src="${report.image}" alt="Photo du signalement" class="report-image">` : ''}
-                </div>
-            `;
-        }).join('')}
-    `;
-
-    container.innerHTML = html;
-}
-
-// Areas
-function renderAreas() {
-    const container = document.getElementById('areas-grid');
-
-    const html = commonAreas.map(area => {
-        const issues = state.reports.filter(r =>
-            r.commonAreaId === area.id &&
-            (r.status === 'pending' || r.status === 'in_progress')
-        ).length;
-
-        return `
-            <div class="area-card">
-                <div class="area-content">
-                    <div class="area-icon">${area.icon}</div>
-                    <div class="area-info">
-                        <h3 class="area-name">${area.name}</h3>
-                        <p class="area-description">${area.description}</p>
-                        ${issues > 0
-                            ? `<div class="area-status warning">⚠️ ${issues} signalement${issues > 1 ? 's' : ''} actif${issues > 1 ? 's' : ''}</div>`
-                            : '<div class="area-status success">✓ Aucun incident</div>'
-                        }
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    container.innerHTML = html;
-}
-
-// Create Report
-function initCreateReport() {
-    const newReportBtn = document.getElementById('new-report-btn');
-    const createFromAreasBtn = document.getElementById('create-from-areas-btn');
-    const cancelBtn = document.getElementById('cancel-report-btn');
-    const reportForm = document.getElementById('report-form');
-    const commonAreaSelect = document.getElementById('common-area');
-    const priorityButtons = document.querySelectorAll('.priority-btn');
-    const imageInput = document.getElementById('image-input');
-    const uploadArea = document.getElementById('image-upload-area');
-    const uploadPlaceholder = document.getElementById('upload-placeholder');
-    const imagePreview = document.getElementById('image-preview');
-    const previewImg = document.getElementById('preview-img');
-    const removeImageBtn = document.getElementById('remove-image');
-
-    // Remplir le select des parties communes
-    commonAreas.forEach(area => {
-        const option = document.createElement('option');
-        option.value = area.id;
-        option.textContent = area.name;
-        commonAreaSelect.appendChild(option);
-    });
-
-    newReportBtn.addEventListener('click', () => {
-        showView('create');
-        resetForm();
-    });
-
-    createFromAreasBtn.addEventListener('click', () => {
-        showView('create');
-        resetForm();
-    });
-
-    cancelBtn.addEventListener('click', () => {
-        showView('dashboard');
-        resetForm();
-    });
-
-    // Gestion de la priorité
-    priorityButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            priorityButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            state.selectedPriority = btn.dataset.priority;
-        });
-    });
-
-    // Upload d'image
-    uploadPlaceholder.addEventListener('click', () => {
-        imageInput.click();
-    });
-
-    imageInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                state.imagePreview = reader.result;
-                previewImg.src = reader.result;
-                uploadPlaceholder.classList.add('hidden');
-                imagePreview.classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    removeImageBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        state.imagePreview = null;
-        imageInput.value = '';
-        uploadPlaceholder.classList.remove('hidden');
-        imagePreview.classList.add('hidden');
-    });
-
-    // Soumission du formulaire
-    reportForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const commonAreaId = commonAreaSelect.value;
-        const description = document.getElementById('description').value;
-
-        if (!commonAreaId || !description.trim()) {
-            return;
-        }
-
-        const commonArea = commonAreas.find(a => a.id === commonAreaId);
-
-        const newReport = {
-            id: Date.now().toString(),
-            commonAreaId,
-            commonAreaName: commonArea.name,
-            description,
-            priority: state.selectedPriority,
-            status: 'pending',
-            image: state.imagePreview,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        };
-
-        state.reports.unshift(newReport);
-
-        showView('dashboard');
-        updateDashboard();
-        resetForm();
-    });
-}
-
-function resetForm() {
-    document.getElementById('report-form').reset();
-    document.getElementById('common-area').value = '';
-    document.getElementById('description').value = '';
-
-    // Reset priority
-    document.querySelectorAll('.priority-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.priority === 'medium') {
-            btn.classList.add('active');
-        }
-    });
-    state.selectedPriority = 'medium';
-
-    // Reset image
-    state.imagePreview = null;
-    document.getElementById('image-input').value = '';
-    document.getElementById('upload-placeholder').classList.remove('hidden');
-    document.getElementById('image-preview').classList.add('hidden');
-}
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', () => {
-
-});
-
-    initLogin();
-    initLogout();
     initNavigation();
-    initCreateReport();
-    updateDashboard();
+    renderNotifications();
+    initNotifPanel();
+});

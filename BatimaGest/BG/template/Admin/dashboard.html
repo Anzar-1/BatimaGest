@@ -24,12 +24,13 @@
                     </div>
                 </div>
                 <div class="header-right">
-                    <button class="icon-btn">
+                    <!-- Bouton notifications admin -->
+                    <button class="icon-btn notif-trigger" id='admin-notif-btn' aria-label="Notifications">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                             <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                         </svg>
-                        <span id="admin-notif-badge" class="badge">0</span>
+                        <span id="admin-notif-badge" class="badge hidden">{{notif_nbr}}</span>
                     </button>
                     <button class="btn btn-outline btn-small" id="admin-logout-btn">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -37,10 +38,11 @@
                             <polyline points="16 17 21 12 16 7"/>
                             <line x1="21" y1="12" x2="9" y2="12"/>
                         </svg>
-                        <a href="{%url 'logout'%}">Deconnexion</a>
+                        <a href="{%url 'staff_logout'%}">Deconnexion</a>
                     </button>
                 </div>
             </div>
+            
         </header>
 
          <main class="app-main admin-main">
@@ -120,11 +122,7 @@
                         <div class="filters-header">
                             <h3>Filtres</h3>
                             <button id="reset-filters" class="btn btn-outline btn-small">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="23 4 23 10 17 10"/>
-                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-                                </svg>
-                                Réinitialiser
+                                Appliquer
                             </button>
                         </div>
                         <div class="filters-grid">
@@ -269,5 +267,43 @@
             <div class="modal-body" id="modal-body"></div>
         </div>
     </div>
+
+      <!-- PANNEAU NOTIFICATIONS ADMIN -->
+    <div id="admin-notif-overlay" class="notif-overlay"></div>
+    <aside id="admin-notif-panel" class="notif-panel notif-panel-admin" aria-label="Notifications administrateur">
+        <div class="notif-panel-header">
+            <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                Nouveaux signalements
+            </h3>
+            <div class="notif-panel-actions">
+                <button id="admin-mark-all-read-btn" class="link-btn-sm"></button>
+                <button id="close-admin-notif-panel" class="close-btn-sm" aria-label="Fermer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="admin-notif-list" class="notif-list">
+            <div class="notif-empty">
+                <span>📋</span>
+                <p>Aucun nouveau signalement</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
+    <script id="notif-data" type="application/json">
+              {{ notif|safe }}
+    </script>
+
+    <script type="text/javascript" src = "{% static 'js/notif_staff.js'%} "></script>
+    
 </body>
 </html>

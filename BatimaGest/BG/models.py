@@ -47,5 +47,6 @@ class Signalement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Notification(models.Model):
-    resident = models.ForeignKey(Resident, on_delete = models.Case, null= True, blank= True)
+    resident = models.ForeignKey(Resident, on_delete = models.CASCADE, null= True, blank= True)
     message = models.fields.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)

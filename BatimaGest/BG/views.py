@@ -10,6 +10,8 @@ from BG.form import signIn_form
 from BG.form import reportForm
 from BG.models import Resident
 from BG.models import Signalement
+from BG.models import Notification
+from django.core.serializers import serialize
 
 @login_required
 def index(request, user_id):
@@ -20,8 +22,15 @@ def index(request, user_id):
     enAttente = signal.filter(state = "En Attente").count()
     enCours = signal.filter(state = "En cours").count()
     resolu = signal.filter(state = "Résolu").count()
+    notif = Notification.objects.filter(resident = user)
+    notif_nbr = notif.count()
+    notif = serialize("json", notif)
+    print(notif)
+
+
     return render(request,"index.html",{"user_id": user_id, 'signalement': signal,"enAttente": enAttente,
-                                   "enCours": enCours , "resolu": resolu})
+                                   "enCours": enCours , "resolu": resolu, "notif_nbr": notif_nbr,
+                                   "notif": notif})
 
 @login_required
 def create_report(request, user_id):
@@ -33,6 +42,7 @@ def create_report(request, user_id):
             r =form.save()
             r.resident = Resident.objects.get(id = user_id)
             r.save()
+            m = Notification.objects.create(message = "Un nouveau problème a été signalé !")
             return redirect("index", user_id)
     else:
         form = reportForm()

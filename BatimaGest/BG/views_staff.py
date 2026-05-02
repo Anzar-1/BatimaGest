@@ -44,11 +44,11 @@ def connection_staff(request):
 
     return render(request,"Admin/login.html",{"form": form})
 
+from django.core.serializers import serialize
+
 @login_required
 @user_passes_test(is_staff_user)
 def dashboard(request, user_id):
-    #avant que j'oublie, y a un filtre dans le front que je dois implementer.
-    #il faut mêtre un formulaire pour signaler que ça a été resolu
     if request.user.id != user_id:
         return redirect("logout")
     signal = Signalement.objects.all()
@@ -56,6 +56,10 @@ def dashboard(request, user_id):
     enAttente = signal.filter(state = "En Attente").count()
     enCours = signal.filter(state = "En cours").count()
     resolu = signal.filter(state = "Résolu").count()
+    notif = Notification.objects.filter(resident__isnull = True)
+    notif_nbr = notif.count()
+    notif = serialize("json", notif)
+
 
     s = filtre(request, signal)
 
@@ -81,9 +85,10 @@ def dashboard(request, user_id):
         report.save()
         return redirect("staffDashboard", user_id)
 
-    return render(request, "Admin/dashboard.html",{"user_id":user_id, "signal": signal,
+    return render(request, "Admin/dashboard.html",{"user_id":user_id, "signal": s,
                                                    'signal_count': signal_count, "enAttente": enAttente,
-                                                   "enCours": enCours, "resolu": resolu})
+                                                   "enCours": enCours, "resolu": resolu, "notif_nbr": notif_nbr,
+                                                   "notif": notif})
 
 def filtre(request, signals):
     
