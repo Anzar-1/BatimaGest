@@ -5,7 +5,7 @@ import os
 
 def Validate_fichier(value):
     ext = os.path.splitext(value.name)[1]
-    valid_extensions = ['.png', '.jpg']
+    valid_extensions = ['.png', '.jpg', 'jpeg']
     if not ext.lower() in valid_extensions:
         raise ValidationError("Le fichier dois être une image png ou jpg.")
 
