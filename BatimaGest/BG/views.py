@@ -98,3 +98,6 @@ def partieC(request, user_id):
     return render(request,"partieC.html",{"user_id":user_id, "signal_ascenseur": signal_ascenseur,
                                           "signal_parking": signal_parking, "signal_escalier":signal_escalier,
                                           "signal_piscine": signal_piscine})
+
+def blank(request):
+    return render(request,"white.html")

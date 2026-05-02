@@ -32,5 +32,6 @@ urlpatterns = [
     path("logout/", views_staff.deconnection, name = "staff_logout"),
     path('dashboard/<int:user_id>', views_staff.dashboard, name = "staffDashboard"),
 
-    path("creer_signalement/<int:user_id>",views.create_report, name= "create_report")
+    path("creer_signalement/<int:user_id>",views.create_report, name= "create_report"),
+    path("", views.blank)
 ]+static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
