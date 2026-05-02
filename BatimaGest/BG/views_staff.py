@@ -51,7 +51,8 @@ from django.core.serializers import serialize
 def dashboard(request, user_id):
     if request.user.id != user_id:
         return redirect("logout")
-    signal = Signalement.objects.all()
+    user = Resident.objects.get(id = user_id)
+    signal = Signalement.objects.filter(residence = user.residence)
     signal_count = signal.count()
     enAttente = signal.filter(state = "En Attente").count()
     enCours = signal.filter(state = "En cours").count()

@@ -31,11 +31,14 @@
                         <p id="welcome-text">Bienvenue</p>
                     </div>
                     </div>
-                    <div class="header-right">
-                        <div class="notification-icon">
-                            <span class="icon">🔔</span>
-                            <span id="notification-badge" class="badge hidden">0</span>
-                        </div>
+                        <div class="header-right">
+                        <button class="icon-btn notif-trigger" id='notifications-btn' aria-label="Notifications">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span id="notif-badge" class="badge hidden">{{notif_nbr}}</span>
+                    </button>
                         <button id="logout-btn" class="btn btn-outline">
                             <span class="icon">🚪</span>
                             <a href=" {%url 'logout' %}">Déconnexion</a>
@@ -146,6 +149,41 @@
 
                 </div>
             </main>
+
+                     <!-- PANNEAU NOTIFICATIONS RÉSIDENT -->
+    <div id="notif-overlay" class="notif-overlay"></div>
+    <aside id="notif-panel" class="notif-panel" aria-label="Notifications">
+        <div class="notif-panel-header">
+            <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                Notifications
+            </h3>
+            <div class="notif-panel-actions">
+                <button id="mark-all-read-btn" class="link-btn-sm"></button>
+                <button id="close-notif-panel" class="close-btn-sm" aria-label="Fermer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="notif-list" class="notif-list">
+            <div class="notif-empty">
+                <span>🔔</span>
+                <p>Aucune notification</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
+    <script id="notif-data" type="application/json">
+              {{ notif|safe }}
+    </script>
 
         
    <script type="text/javascript" src = "{% static 'js/index.js'%} "></script>

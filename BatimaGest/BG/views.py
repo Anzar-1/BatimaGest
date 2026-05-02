@@ -25,7 +25,6 @@ def index(request, user_id):
     notif = Notification.objects.filter(resident = user)
     notif_nbr = notif.count()
     notif = serialize("json", notif)
-    print(notif)
 
 
     return render(request,"index.html",{"user_id": user_id, 'signalement': signal,"enAttente": enAttente,
@@ -36,17 +35,23 @@ def index(request, user_id):
 def create_report(request, user_id):
     if request.user.id != user_id:
         return redirect("logout")
+    user = Resident.objects.get(id = user_id)
+    notif = Notification.objects.filter(resident = user)
+    notif_nbr = notif.count()
+    notif = serialize("json", notif)
     if request.method == "POST":
         form = reportForm(request.POST,request.FILES)
         if form.is_valid():
             r =form.save()
-            r.resident = Resident.objects.get(id = user_id)
+            r.resident = user
+            r.residence = user.residence
             r.save()
-            m = Notification.objects.create(message = "Un nouveau problème a été signalé !")
+            m = Notification.objects.create(message = "Un nouveau problème a été signalé !", residence = user.residence)
             return redirect("index", user_id)
     else:
         form = reportForm()
-    return render(request, "create_report.html", {"form": form})
+    return render(request, "create_report.html", {"form": form, "notif_nbr": notif_nbr,
+                                   "notif": notif})
 
 def deconnection(request):
     logout(request)
@@ -91,13 +96,18 @@ def signUp(request):
 def partieC(request, user_id):
     if request.user.id != user_id:
         return redirect("logout")
-    signal_ascenseur = Signalement.objects.filter(partieC = "Ascenseur").count()
-    signal_parking = Signalement.objects.filter(partieC = "Parking").count()
-    signal_escalier = Signalement.objects.filter(partieC = "Escalier").count()
-    signal_piscine = Signalement.objects.filter(partieC = "Piscine").count()
+    user = Resident.objects.get(id = user_id)
+    signal_ascenseur = Signalement.objects.filter(partieC = "Ascenseur", residence = user.residence).count()
+    signal_parking = Signalement.objects.filter(partieC = "Parking", residence = user.residence).count()
+    signal_escalier = Signalement.objects.filter(partieC = "Escalier", residence = user.residence).count()
+    signal_piscine = Signalement.objects.filter(partieC = "Piscine", residence = user.residence).count()
+    notif = Notification.objects.filter(resident = user)
+    notif_nbr = notif.count()
+    notif = serialize("json", notif)
     return render(request,"partieC.html",{"user_id":user_id, "signal_ascenseur": signal_ascenseur,
                                           "signal_parking": signal_parking, "signal_escalier":signal_escalier,
-                                          "signal_piscine": signal_piscine})
+                                          "signal_piscine": signal_piscine, "notif_nbr": notif_nbr,
+                                        "notif": notif})
 
 def blank(request):
     return render(request,"white.html")

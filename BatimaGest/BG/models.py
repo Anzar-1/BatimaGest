@@ -12,6 +12,7 @@ def Validate_fichier(value):
 
 class Resident(AbstractUser, PermissionsMixin):
     telephone = models.fields.IntegerField(null = True, blank = True)
+    residence = models.fields.CharField(max_length=50, default = "B-12", null = True, blank = True)
     
     class Meta:
         verbose_name = "User"
@@ -27,7 +28,7 @@ class Signalement(models.Model):
     resident = models.ForeignKey(Resident, on_delete=models.SET_NULL, null = True, blank = True)
     partieC= models.fields.CharField(max_length=50, choices=Partie_Comune.choices, default = "Ascenseur")
     file_path = models.FileField(upload_to="files/", null = True,verbose_name="", blank = True,validators=[Validate_fichier]) 
-    #Je dois verifier la "fin"
+    residence = models.fields.CharField(max_length=50, default = "B-12", null = True, blank = True)
     description = models.CharField(max_length=500)
     
     class etat(models.TextChoices):
@@ -48,5 +49,6 @@ class Signalement(models.Model):
 
 class Notification(models.Model):
     resident = models.ForeignKey(Resident, on_delete = models.CASCADE, null= True, blank= True)
+    residence = models.fields.CharField(max_length=50, default = "B-12", null = True, blank = True)
     message = models.fields.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
