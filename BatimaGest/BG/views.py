@@ -51,7 +51,7 @@ def create_report(request, user_id):
     else:
         form = reportForm()
     return render(request, "create_report.html", {"form": form, "notif_nbr": notif_nbr,
-                                   "notif": notif})
+                                   "notif": notif, "user_id": user_id})
 
 def deconnection(request):
     logout(request)
@@ -99,12 +99,25 @@ def partieC(request, user_id):
     user = Resident.objects.get(id = user_id)
     signal = Signalement.objects.filter(residence = user.residence)
     signal_ascenseur = signal.filter(partieC = "Ascenseur").count()
+    signal_ascenseur = signal_ascenseur- signal.filter(partieC = "Ascenseur", state= "Résolu").count()
+    
     signal_parking =signal.filter(partieC = "Parking").count()
+    signal_parking = signal_parking- signal.filter(partieC = "Parking", state= "Résolu").count()
     signal_escalier = signal.filter(partieC = "Escalier").count()
+    signal_escalier = signal_escalier - signal.filter(partieC = "Escalier", state= "Résolu").count()
+    
     signal_piscine = signal.filter(partieC = "Piscine").count()
+    signal_piscine = signal_piscine - signal.filter(partieC = "Piscine", state= "Résolu").count()
+
     signal_gym = signal.filter(partieC = "Gym").count()
+    signal_gym = signal_gym - signal.filter(partieC = "Gym", state = "Résolu").count()
+    
     signal_hall = signal.filter(partieC = "Hall").count()
+    signal_hall = signal_hall- signal.filter(partieC = "Hall", state= "Résolu").count()
+
     signal_jardin = signal.filter(partieC = "Jardin").count()
+    signal_jardin = signal_jardin- signal.filter(partieC = "Jardin", state= "Résolu").count()
+
     notif = Notification.objects.filter(resident = user)
     notif_nbr = notif.count()
     notif = serialize("json", notif)

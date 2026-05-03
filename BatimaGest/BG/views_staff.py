@@ -62,6 +62,7 @@ def dashboard(request, user_id):
     notif = serialize("json", notif)
 
 
+
     s = filtre(request, signal)
 
     if request.POST:

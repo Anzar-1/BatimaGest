@@ -46,23 +46,25 @@
                 </div>
         </header>
 
-        <!-- Navigation -->
+                <!-- Navigation -->
         <nav class="nav-app">
             <div class="nav-container">
-                    <button class="nav-item active" data-view="dashboard">
+                    <button class="nav-item" data-view="dashboard">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7"/>
                         <rect x="14" y="3" width="7" height="7"/>
                         <rect x="14" y="14" width="7" height="7"/>
                         <rect x="3" y="14" width="7" height="7"/>
                     </svg>
-                        Mes signalements</button>
-                    <button class="nav-item" data-view="areas">
+                    <a href = "{%url 'index' user_id %}">dashboard</a>
+                </button>
+                    <button  class="nav-item">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                         <polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
-                        Parties communes</button>
+                    <a href = "{%url 'patieC' user_id %}">Parties communes</a>
+                        </button>
             </div>
         </nav>
                 
@@ -70,7 +72,7 @@
                     <div class="form-container">
                             <h2>Nouveau signalement</h2>
 
-                            <form id="report-form" enctype="multipart/form-data"  
+                            <form id="report-form" enctype="multipart/form-data" onsubmit="return handleSubmit(this)" 
                             class="report-form" method="POST">
                                 {%csrf_token%}
 
@@ -118,7 +120,7 @@
                             </div>
 
                                 <div class="form-actions">
-                                    <input type="submit" onclick="a(this)" class="btn btn-primary" value=Envoyer le signalement>
+                                    <input type="submit" class="btn btn-primary" value=Envoyer le signalement>
                                 </div>
                             </form>
                         </div>
