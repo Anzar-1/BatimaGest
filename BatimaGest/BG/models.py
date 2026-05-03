@@ -23,6 +23,9 @@ class Partie_Comune(models.TextChoices):
     Parking = "Parking"
     Escalier = "Escalier"
     Piscine = "Piscine"
+    Hall = "Hall"
+    Jardin = "Jardin"
+    Gym = "Gym"
 
 class Signalement(models.Model):
     resident = models.ForeignKey(Resident, on_delete=models.SET_NULL, null = True, blank = True)

@@ -1,3 +1,5 @@
+
+
 console.log("bonjour");
 const INITIAL_NOTIFICATIONS = JSON.parse(document.getElementById('notif-data').textContent)
 
@@ -235,6 +237,10 @@ function initNavigation() {
     });
 }
 
+//trying to disable button after click:
+function a(element) {
+  element.disabled = true;
+}
 
 
 

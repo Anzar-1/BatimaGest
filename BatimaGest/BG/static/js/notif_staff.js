@@ -1,3 +1,5 @@
+
+
 const INITIAL_NOTIFICATIONS = JSON.parse(
   document.getElementById('notif-data').textContent);
 

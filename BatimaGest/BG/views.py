@@ -97,17 +97,22 @@ def partieC(request, user_id):
     if request.user.id != user_id:
         return redirect("logout")
     user = Resident.objects.get(id = user_id)
-    signal_ascenseur = Signalement.objects.filter(partieC = "Ascenseur", residence = user.residence).count()
-    signal_parking = Signalement.objects.filter(partieC = "Parking", residence = user.residence).count()
-    signal_escalier = Signalement.objects.filter(partieC = "Escalier", residence = user.residence).count()
-    signal_piscine = Signalement.objects.filter(partieC = "Piscine", residence = user.residence).count()
+    signal = Signalement.objects.filter(residence = user.residence)
+    signal_ascenseur = signal.filter(partieC = "Ascenseur").count()
+    signal_parking =signal.filter(partieC = "Parking").count()
+    signal_escalier = signal.filter(partieC = "Escalier").count()
+    signal_piscine = signal.filter(partieC = "Piscine").count()
+    signal_gym = signal.filter(partieC = "Gym").count()
+    signal_hall = signal.filter(partieC = "Hall").count()
+    signal_jardin = signal.filter(partieC = "Jardin").count()
     notif = Notification.objects.filter(resident = user)
     notif_nbr = notif.count()
     notif = serialize("json", notif)
     return render(request,"partieC.html",{"user_id":user_id, "signal_ascenseur": signal_ascenseur,
                                           "signal_parking": signal_parking, "signal_escalier":signal_escalier,
                                           "signal_piscine": signal_piscine, "notif_nbr": notif_nbr,
-                                        "notif": notif})
+                                        "notif": notif, "signal_jardin": signal_jardin, "signal_entree": signal_hall,
+                                        "signal_gym": signal_gym})
 
 def blank(request):
     return render(request,"white.html")

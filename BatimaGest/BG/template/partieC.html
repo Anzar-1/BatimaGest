@@ -140,6 +140,51 @@
 
                         <p>&nbsp;</p>
 
+                         <div class="area-card">
+                            <div class="area-content">
+                                <div class="area-info">
+                                    <h3 class="area-name">Salle de Sport</h3>
+                                    {%if signal_ascenseur%}
+                                        <div class="area-status warning">⚠️  {{signal_gym}} signalements</div>`
+                                    {%else%} 
+                                        <div class="area-status success">✓ Aucun incident</div>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>&nbsp;</p>
+
+                         <div class="area-card">
+                            <div class="area-content">
+                                <div class="area-info">
+                                    <h3 class="area-name">Hall d'entrée</h3>
+                                    {%if signal_ascenseur%}
+                                        <div class="area-status warning">⚠️  {{signal_entree}} signalements</div>`
+                                    {%else%} 
+                                        <div class="area-status success">✓ Aucun incident</div>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>&nbsp;</p>
+
+                         <div class="area-card">
+                            <div class="area-content">
+                                <div class="area-info">
+                                    <h3 class="area-name">Jardin</h3>
+                                    {%if signal_ascenseur%}
+                                        <div class="area-status warning">⚠️  {{signal_jardin}} signalements</div>`
+                                    {%else%} 
+                                        <div class="area-status success">✓ Aucun incident</div>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>&nbsp;</p>
+
                         <button id="create-from-areas-btn" class="btn btn-primary">
                             <span class="icon">➕</span>
                             <a href = "{%url 'create_report' user_id%}">Signaler un incident</a>
