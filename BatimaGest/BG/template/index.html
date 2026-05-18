@@ -39,10 +39,10 @@
                         </svg>
                         <span id="notif-badge" class="badge hidden">{{notif_nbr}}</span>
                     </button>
-                        <button id="logout-btn" class="btn btn-outline">
+                        <a href=" {%url 'logout' %}" id="logout-btn" class="btn btn-outline">
                             <span class="icon">🚪</span>
-                            <a href=" {%url 'logout' %}">Déconnexion</a>
-                        </button>
+                            Déconnexion
+                        </a>
                     </div>
                 </div>
         </header>
@@ -50,23 +50,23 @@
         <!-- Navigation -->
         <nav class="nav-app">
             <div class="nav-container">
-                    <button class="nav-item active" data-view="dashboard">
+                    <a href = "{%url 'index' user_id %}" class="nav-item active" data-view="dashboard">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7"/>
                         <rect x="14" y="3" width="7" height="7"/>
                         <rect x="14" y="14" width="7" height="7"/>
                         <rect x="3" y="14" width="7" height="7"/>
                     </svg>
-                    <a href = "{%url 'index' user_id %}">dashboard</a>
-                </button>
-                    <button  class="nav-item">
+                    dashboard
+                </a>
+                    <a href = "{%url 'patieC' user_id %}"  class="nav-item">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                         <polyline points="9 22 9 12 15 12 15 22"/>
                         
                     </svg>
-                    <a href = "{%url 'patieC' user_id %}">Parties communes</a>
-                        </button>
+                    Parties communes
+                </a>
             </div>
         </nav>
 
@@ -121,14 +121,14 @@
 
                     <!-- Create Report Button -->
                     <div class="action-bar">
-                        <button id="new-report-btn" class="btn btn-primary btn-large btn-create">
+                        <a href = "{%url 'create_report' user_id%}" id="new-report-btn" class="btn btn-primary btn-large btn-create">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"/>
                             <line x1="12" y1="8" x2="12" y2="16"/>
                             <line x1="8" y1="12" x2="16" y2="12"/>
                         </svg>
-                            <a href = "{%url 'create_report' user_id%}">Nouveau signalement</a>
-                        </button>
+                            Nouveau signalement</a>
+                        
                     </div>
 
                     <!-- Reports List -->
